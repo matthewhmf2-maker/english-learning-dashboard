@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barney's Revenge Plan — Learning Dashboard</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --paper: #fffdf8;
+      --ink: #1f2328;
+      --muted: #667085;
+      --line: #ddd4c8;
+      --accent: #16324f;
+      --accent-2: #a67c52;
+      --soft: #efe7dc;
+      --success: #1f7a52;
+      --card-shadow: 0 10px 30px rgba(25, 30, 35, 0.08);
+      --radius: 22px;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(166,124,82,0.08), transparent 30%),
+        linear-gradient(180deg, #f7f3ed 0%, #f5f1ea 100%);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px 18px 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0 26px;
+      border-bottom: 1px solid rgba(31, 35, 40, 0.08);
+      margin-bottom: 28px;
+    }
+
+    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .brand-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .topnav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.94rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: 0.2s ease;
+    }
+    .topnav a:hover {
+      color: var(--accent);
+      background: rgba(22, 50, 79, 0.06);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .hero-card, .meta-card, .section, .side-card {
+      background: var(--paper);
+      border: 1px solid rgba(31, 35, 40, 0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+    }
+
+    .hero-card {
+      padding: 34px 30px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      top: -24px;
+      right: -28px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(166,124,82,0.18), rgba(166,124,82,0));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.76rem;
+      color: var(--accent-2);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      max-width: 11ch;
+      color: #18212b;
+    }
+
+    .dek {
+      margin: 18px 0 22px;
+      color: #45515d;
+      max-width: 60ch;
+      font-size: 1.03rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 8px 18px rgba(22, 50, 79, 0.22);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(22, 50, 79, 0.18);
+    }
+
+    .meta-card {
+      padding: 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .meta-card h3, .section h2, .side-card h3 {
+      margin: 0;
+      font-family: var(--serif);
+      color: #18212b;
+      letter-spacing: -0.02em;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .meta-item {
+      padding: 14px;
+      border-radius: 16px;
+      background: #faf7f2;
+      border: 1px solid rgba(31, 35, 40, 0.06);
+    }
+    .meta-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .meta-value {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.82fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .main { display: grid; gap: 22px; }
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .section { padding: 26px; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(31, 35, 40, 0.08);
+    }
+    .section-kicker {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      color: var(--accent-2);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .video-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      background: #111;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+    }
+    .video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .objective-list, .quiz-list, .review-list, .grammar-list, .notes-list {
+      display: grid;
+      gap: 12px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .objective-list li, .quiz-list li, .review-list li, .grammar-list li, .notes-list li {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #faf7f2;
+      border: 1px solid rgba(31, 35, 40, 0.06);
+    }
+    .objective-list strong, .grammar-list strong { color: var(--accent); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 12px 10px;
+      vertical-align: top;
+      text-align: left;
+      border-bottom: 1px solid rgba(31, 35, 40, 0.08);
+    }
+    th {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    tr:last-child td { border-bottom: none; }
+    .transcript tbody tr:hover, .vocab tbody tr:hover {
+      background: rgba(22, 50, 79, 0.03);
+    }
+    .time {
+      white-space: nowrap;
+      color: var(--accent-2);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .speaker {
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .accordion { display: grid; gap: 12px; }
+    details {
+      border: 1px solid rgba(31, 35, 40, 0.08);
+      border-radius: 18px;
+      background: #fbf8f4;
+      overflow: hidden;
+    }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .details-content {
+      padding: 0 18px 18px;
+      color: #4a5560;
+    }
+
+    .quote {
+      margin: 0;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      background: #fbf7f1;
+      border-radius: 0 16px 16px 0;
+      font-family: var(--serif);
+      font-size: 1.18rem;
+      line-height: 1.5;
+    }
+
+    .side-card { padding: 22px; }
+    .toc {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .toc a {
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: #44515d;
+      background: #faf7f2;
+      border: 1px solid rgba(31, 35, 40, 0.06);
+      font-size: 0.94rem;
+    }
+    .toc a:hover {
+      color: var(--accent);
+      background: rgba(22, 50, 79, 0.05);
+    }
+
+    .progress-ring {
+      display: grid;
+      place-items: center;
+      width: 148px;
+      height: 148px;
+      margin: 10px auto 16px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) 0 72%, rgba(22,50,79,0.12) 72% 100%);
+      position: relative;
+    }
+    .progress-ring::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 50%;
+      background: var(--paper);
+    }
+    .progress-value {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .progress-value strong {
+      display: block;
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .mini-stats {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .mini-stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      background: #faf7f2;
+      color: #46515d;
+    }
+    .mini-stat strong { color: var(--accent); }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .tag {
+      font-size: 0.82rem;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(22, 50, 79, 0.07);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .footer {
+      padding: 26px 10px 8px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      h1 { max-width: 100%; }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 16px 12px 42px; }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .hero-card, .section, .side-card, .meta-card {
+        padding: 20px;
+        border-radius: 18px;
+      }
+      .meta-grid { grid-template-columns: 1fr; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      .transcript tr, .vocab tr {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(31, 35, 40, 0.08);
+      }
+      .transcript td, .vocab td {
+        border: 0;
+        padding: 4px 0;
+      }
+      .transcript td::before, .vocab td::before {
+        display: block;
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+      .transcript td:nth-child(1)::before { content: "Time"; }
+      .transcript td:nth-child(2)::before { content: "Speaker"; }
+      .transcript td:nth-child(3)::before { content: "Dialogue"; }
+      .vocab td:nth-child(1)::before { content: "Expression"; }
+      .vocab td:nth-child(2)::before { content: "Meaning"; }
+      .vocab td:nth-child(3)::before { content: "Example"; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-kicker">ST English Learning Lab</div>
+        <div class="brand-name">Editorial Lesson Dashboard</div>
+      </div>
+      <nav class="topnav">
+        <a href="#overview">Overview</a>
+        <a href="#transcript">Transcript</a>
+        <a href="#vocabulary">Vocabulary</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#speaking">Speaking</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <article class="hero-card">
+        <div class="eyebrow">Video Lesson 2 · Sitcom English</div>
+        <h1>Barney’s Revenge Plan</h1>
+        <p class="dek">
+          A short but dense comedy clip packed with fast dialogue, slang, legal-business vocabulary, and one of Barney’s most dramatic revenge reveals. This lesson is ideal for upper-intermediate learners who want listening depth with strong storytelling energy.
+        </p>
+        <div class="hero-meta">
+          <span class="pill">Upper-Intermediate</span>
+          <span class="pill">~60 seconds</span>
+          <span class="pill">TV Comedy Clip</span>
+          <span class="pill">Fast American English</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#watch">Start Lesson</a>
+          <a class="btn btn-secondary" href="https://youtube.com/shorts/6zmCEFDBnSY" target="_blank" rel="noreferrer">Open YouTube Short</a>
+        </div>
+      </article>
+
+      <aside class="meta-card">
+        <h3>Lesson Snapshot</h3>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Source</div>
+            <div class="meta-value">ST English</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Format</div>
+            <div class="meta-value">Transcript + Quiz</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Focus</div>
+            <div class="meta-value">Slang & Listening</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Theme</div>
+            <div class="meta-value">Revenge Plot</div>
+          </div>
+        </div>
+        <p>
+          This page blends magazine-style editorial typography with a structured education-platform layout, turning one short YouTube lesson into a complete learning experience.
+        </p>
+        <div class="tag-row">
+          <span class="tag">opening</span>
+          <span class="tag">fall guy</span>
+          <span class="tag">FYI</span>
+          <span class="tag">the feds</span>
+          <span class="tag">vowed</span>
+        </div>
+      </aside>
+    </section>
+
+    <div class="layout">
+      <main class="main">
+        <section id="watch" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Lesson Video</div>
+              <h2>Watch the source clip</h2>
+            </div>
+          </div>
+          <div class="video-wrap">
+            <iframe src="https://www.youtube.com/embed/6zmCEFDBnSY" title="Barney's Revenge Plan" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section id="overview" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Lesson Overview</div>
+              <h2>What this lesson trains</h2>
+            </div>
+          </div>
+          <p>
+            In this scene, Barney accepts a suspicious corporate job without reading the contract, only to reveal that he never intended to work loyally at all. The clip is useful because it combines humor, workplace language, slang, and dramatic delivery in a very short format.
+          </p>
+          <ul class="objective-list">
+            <li><strong>Listening speed:</strong> train your ear for short, fast sitcom dialogue.</li>
+            <li><strong>Vocabulary range:</strong> understand slang such as <em>deets</em>, <em>fall guy</em>, and <em>the feds</em>.</li>
+            <li><strong>Storytelling tone:</strong> notice how Barney builds suspense and revenge.</li>
+            <li><strong>Business/legal context:</strong> recognize phrases related to contracts, blame, and illegal activity.</li>
+          </ul>
+        </section>
+
+        <section id="transcript" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Full Transcript</div>
+              <h2>Timestamped dialogue</h2>
+            </div>
+          </div>
+          <table class="transcript">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Speaker</th>
+                <th>Dialogue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="time">00:00</td><td class="speaker">Greg</td><td>“We have one opening you’d be perfect for.”</td></tr>
+              <tr><td class="time">00:02</td><td class="speaker">Barney</td><td>“Great. What do I do?”</td></tr>
+              <tr><td class="time">00:04</td><td class="speaker">Greg</td><td>“Please provide legal exculpation and sign everything. Just show up every day, scribble your name and a bunch of documents, and we’ll pay you 16 crap loads a year.”</td></tr>
+              <tr><td class="time">00:15</td><td class="speaker">Greg</td><td>“Deets are in the contract. I’ll give you time to think about it.”</td></tr>
+              <tr><td class="time">00:18</td><td class="speaker">Barney</td><td>“I’ll take it.”</td></tr>
+              <tr><td class="time">00:19</td><td class="speaker">Greg</td><td>“Did you even read this before signing it?”</td></tr>
+              <tr><td class="time">00:21</td><td class="speaker">Barney</td><td>“No.”</td></tr>
+              <tr><td class="time">00:22</td><td class="speaker">Greg</td><td>“You’re hired.”</td></tr>
+              <tr><td class="time">00:23</td><td class="speaker">Friend</td><td>“Best job ever, right, Barney?”</td></tr>
+              <tr><td class="time">00:25</td><td class="speaker">Barney</td><td>“You’re being stupid. The company is setting you up as their fall guy for all of their illegal activities.”</td></tr>
+              <tr><td class="time">00:31</td><td class="speaker">Barney</td><td>“No, you guys are being stupid.”</td></tr>
+              <tr><td class="time">00:34</td><td class="speaker">Narrator</td><td>“And then kids, Barney revealed to us his master plan.”</td></tr>
+              <tr><td class="time">00:37</td><td class="speaker">Barney</td><td>“Hey, Greg, I know you’re busy, but FYI, I’ve been colluding with the feds. They know everything, and they’re on their way up right now to shut down this division and arrest you.”</td></tr>
+              <tr><td class="time">00:46</td><td class="speaker">Greg</td><td>“Why would you do that?”</td></tr>
+              <tr><td class="time">00:48</td><td class="speaker">Barney</td><td>“Oh gosh, countless moral reasons could have applied, but this is pretty much revenge for stealing my girlfriend.”</td></tr>
+              <tr><td class="time">00:54</td><td class="speaker">Barney</td><td>“See, that day I vowed I would do everything in my power to track you down, gain your trust, and then destroy you.”</td></tr>
+              <tr><td class="time">00:59</td><td class="speaker">Greg</td><td>“Who are you?”</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="vocabulary" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Vocabulary</div>
+              <h2>Key expressions & examples</h2>
+            </div>
+          </div>
+          <table class="vocab">
+            <thead>
+              <tr>
+                <th>Expression</th>
+                <th>Meaning</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>opening</strong></td><td>a job position available</td><td>We have an opening for a manager.</td></tr>
+              <tr><td><strong>you’d be perfect for</strong></td><td>you are ideal for this</td><td>You’d be perfect for this role.</td></tr>
+              <tr><td><strong>provide legal exculpation</strong></td><td>legally protect someone from blame</td><td>It sounds formal and corporate.</td></tr>
+              <tr><td><strong>crap loads</strong></td><td>slang for “a lot”</td><td>He makes crap loads of money.</td></tr>
+              <tr><td><strong>deets</strong></td><td>slang for details</td><td>Send me the deets tonight.</td></tr>
+              <tr><td><strong>I’ll take it</strong></td><td>I accept the offer</td><td>That’s a good deal — I’ll take it.</td></tr>
+              <tr><td><strong>fall guy</strong></td><td>person blamed for others’ mistakes</td><td>He became the fall guy for the scandal.</td></tr>
+              <tr><td><strong>FYI</strong></td><td>for your information</td><td>FYI, the meeting starts at 3 p.m.</td></tr>
+              <tr><td><strong>colluding with</strong></td><td>secretly working together</td><td>They were colluding with rivals.</td></tr>
+              <tr><td><strong>the feds</strong></td><td>federal agents or police</td><td>The feds are investigating the case.</td></tr>
+              <tr><td><strong>countless</strong></td><td>too many to count</td><td>Countless people watched the episode.</td></tr>
+              <tr><td><strong>vowed</strong></td><td>promised seriously</td><td>She vowed to finish the job.</td></tr>
+              <tr><td><strong>track you down</strong></td><td>find someone after searching</td><td>I’ll track you down later.</td></tr>
+              <tr><td><strong>gain your trust</strong></td><td>make someone trust you</td><td>It takes time to gain a client’s trust.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="quiz" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Listening Quiz</div>
+              <h2>Quick comprehension check</h2>
+            </div>
+          </div>
+          <ol class="quiz-list">
+            <li>What kind of job is Barney offered?</li>
+            <li>How much will they pay him?</li>
+            <li>What does <em>fall guy</em> mean in this context?</li>
+            <li>Why did Barney really take the job?</li>
+            <li>What was Barney’s master plan?</li>
+          </ol>
+          <div class="accordion" style="margin-top:16px;">
+            <details>
+              <summary>Show answers <span>＋</span></summary>
+              <div class="details-content">
+                <ol>
+                  <li>A job where he signs documents to provide “legal exculpation.”</li>
+                  <li>“16 crap loads a year,” meaning a very large salary.</li>
+                  <li>A person who takes the blame for someone else’s illegal activity.</li>
+                  <li>Because Greg stole his girlfriend, and Barney wanted revenge.</li>
+                  <li>To gain Greg’s trust and then expose the company to the feds.</li>
+                </ol>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section id="speaking" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Speaking Practice</div>
+              <h2>Shadow the dramatic line</h2>
+            </div>
+          </div>
+          <blockquote class="quote">
+            “See, that day I vowed I would do everything in my power to track you down, gain your trust, and then destroy you.”
+          </blockquote>
+          <ul class="notes-list" style="margin-top:16px;">
+            <li><strong>Delivery:</strong> slow, dramatic, and controlled.</li>
+            <li><strong>Stress:</strong> emphasize <em>vowed</em>, <em>track you down</em>, and <em>destroy you</em>.</li>
+            <li><strong>Practice idea:</strong> record yourself twice — once naturally, once like a TV villain.</li>
+          </ul>
+        </section>
+
+        <section id="culture" class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Culture & Grammar</div>
+              <h2>Why this clip works</h2>
+            </div>
+          </div>
+          <ul class="objective-list">
+            <li><strong>Cultural note:</strong> <em>How I Met Your Mother</em> is a well-known American sitcom built around friendship, relationships, and long-running jokes.</li>
+            <li><strong>Character note:</strong> Barney is famous for elaborate schemes, confident delivery, and exaggerated storytelling.</li>
+            <li><strong>Trope:</strong> revenge plots are satisfying because the audience watches a long setup before the reveal.</li>
+            <li><strong>Register:</strong> <em>crap loads</em> is very informal and should not be used in formal interviews or business meetings.</li>
+          </ul>
+          <ul class="grammar-list" style="margin-top:16px;">
+            <li><strong>Reported speech:</strong> “Barney says, ‘I’ll take it’” becomes “Barney said he would take it.”</li>
+            <li><strong>Past storytelling:</strong> narration often uses simple past to explain events clearly and dramatically.</li>
+          </ul>
+        </section>
+      </main>
+
+      <aside class="sidebar">
+        <section class="side-card">
+          <h3>Lesson Navigation</h3>
+          <div class="toc">
+            <a href="#watch">Watch video</a>
+            <a href="#overview">Lesson overview</a>
+            <a href="#transcript">Full transcript</a>
+            <a href="#vocabulary">Vocabulary</a>
+            <a href="#quiz">Quiz</a>
+            <a href="#speaking">Speaking practice</a>
+            <a href="#culture">Culture & grammar</a>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h3>Progress Tracker</h3>
+          <div class="progress-ring">
+            <div class="progress-value"><strong>72%</strong><span>Lesson Readiness</span></div>
+          </div>
+          <div class="mini-stats">
+            <div class="mini-stat"><span>Transcript reviewed</span><strong>17 lines</strong></div>
+            <div class="mini-stat"><span>Target words</span><strong>14 items</strong></div>
+            <div class="mini-stat"><span>Quiz questions</span><strong>5 checks</strong></div>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h3>Pronunciation Focus</h3>
+          <ul class="notes-list">
+            <li><strong>you’d be</strong> → “yood-be”</li>
+            <li><strong>What do I do?</strong> → “Whadda-I-do?”</li>
+            <li><strong>Did you even</strong> → “Didja even”</li>
+            <li><strong>going to</strong> → “gonna” in fast speech</li>
+            <li><strong>FYI</strong> → say each letter clearly</li>
+          </ul>
+        </section>
+
+        <section class="side-card">
+          <h3>Review Prompts</h3>
+          <ol class="review-list">
+            <li>What does <em>opening</em> mean in a job context?</li>
+            <li>What is a formal substitute for <em>crap loads</em>?</li>
+            <li>What does FYI stand for?</li>
+            <li>Why is Barney’s job dangerous?</li>
+            <li>What does <em>fall guy</em> mean?</li>
+          </ol>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      Created from ST English lesson material · Rebranded as an editorial learning dashboard.
+    </footer>
+  </div>
+</body>
+</html>
